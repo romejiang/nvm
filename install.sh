@@ -24,14 +24,22 @@ nvm_source() {
   local NVM_METHOD
   NVM_METHOD="$1"
   local NVM_SOURCE_URL
-  NVM_SOURCE_URL="$NVM_SOURCE"
+  local NVM_SOURCE_URL_ROOT
+
+  if [ "_$NVM_SOURCE" = "_" ]; then
+    NVM_SOURCE_URL_ROOT="https://raw.githubusercontent.com/creationix/nvm/$(nvm_latest_version)"
+  else
+    NVM_SOURCE_URL_ROOT="$NVM_SOURCE"
+    # https://git.oschina.net/romejiang/nvm/raw/master/install.sh
+  fi
+  
   if [ "_$NVM_METHOD" = "_script-nvm-exec" ]; then
-    NVM_SOURCE_URL="https://raw.githubusercontent.com/creationix/nvm/$(nvm_latest_version)/nvm-exec"
+    NVM_SOURCE_URL="$NVM_SOURCE_URL_ROOT/nvm-exec"
   elif [ -z "$NVM_SOURCE_URL" ]; then
     if [ "_$NVM_METHOD" = "_script" ]; then
-      NVM_SOURCE_URL="https://raw.githubusercontent.com/creationix/nvm/$(nvm_latest_version)/nvm.sh"
+      NVM_SOURCE_URL="$NVM_SOURCE_URL_ROOT/nvm.sh"
     elif [ "_$NVM_METHOD" = "_git" ] || [ -z "$NVM_METHOD" ]; then
-      NVM_SOURCE_URL="https://github.com/creationix/nvm.git"
+      NVM_SOURCE_URL="https://git.oschina.net/romejiang/nvm.git"
     else
       echo >&2 "Unexpected value \"$NVM_METHOD\" for \$NVM_METHOD"
       return 1
